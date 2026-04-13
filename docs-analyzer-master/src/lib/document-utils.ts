@@ -10,7 +10,6 @@ export interface DocumentMetadata {
 
 export const SUPPORTED_FILE_TYPES = {
   'application/pdf': '.pdf',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': '.docx',
   'text/plain': '.txt',
 } as const;
 
@@ -24,7 +23,7 @@ export function validateFile(file: File): { valid: boolean; error?: string } {
   if (!Object.keys(SUPPORTED_FILE_TYPES).includes(file.type)) {
     return {
       valid: false,
-      error: 'Unsupported file type. Please upload PDF, DOCX, or TXT files.',
+      error: 'Unsupported file type. Please upload PDF or TXT files.',
     };
   }
 
@@ -53,7 +52,6 @@ export function getDocumentType(filename: string): string {
   
   const typeMap: Record<string, string> = {
     pdf: 'PDF Document',
-    docx: 'Word Document',
     txt: 'Text Document',
   };
   
@@ -63,7 +61,6 @@ export function getDocumentType(filename: string): string {
 export async function extractTextFromFile(file: File): Promise<string> {
   // This is a placeholder. In a real implementation, you would:
   // - For PDFs: Use a library like pdf-parse or PDF.js
-  // - For DOCX: Use mammoth.js or similar
   // - For TXT: Use FileReader directly
   
   return new Promise((resolve, reject) => {
@@ -81,9 +78,9 @@ export async function extractTextFromFile(file: File): Promise<string> {
     if (file.type === 'text/plain') {
       reader.readAsText(file);
     } else {
-      // For PDF and DOCX, you'd need specific libraries
+      // For PDF, you'd need specific libraries
       // For now, return a placeholder
-      resolve(`[Extracted text from ${file.name} - implement PDF/DOCX parsing]`);
+      resolve(`[Extracted text from ${file.name} - implement PDF parsing]`);
     }
   });
 }

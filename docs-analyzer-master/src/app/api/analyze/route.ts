@@ -77,9 +77,9 @@ Provide only valid JSON without any markdown formatting or code blocks.`;
       console.error("Error parsing JSON:", parseError);
       // Return a structured error response
       return NextResponse.json(
-        { 
+        {
           error: "Failed to parse analysis results",
-          rawResponse: text 
+          rawResponse: text
         },
         { status: 500 }
       );

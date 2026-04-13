@@ -39,7 +39,7 @@ export default function Home() {
             <span className="text-primary">Document Analysis</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Extract insights, identify risks, and analyze contracts instantly with advanced AI. 
+            Extract insights, identify risks, and analyze contracts instantly with advanced AI.
             Built for legal professionals who need speed and accuracy.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">

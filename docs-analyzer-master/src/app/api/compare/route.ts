@@ -90,9 +90,9 @@ Provide only valid JSON without any markdown formatting or code blocks.`;
     } catch (parseError) {
       console.error("Error parsing JSON:", parseError);
       return NextResponse.json(
-        { 
+        {
           error: "Failed to parse comparison results",
-          rawResponse: text 
+          rawResponse: text
         },
         { status: 500 }
       );

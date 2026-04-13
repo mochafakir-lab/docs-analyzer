@@ -193,14 +193,14 @@ export default function UploadPage() {
               >
                 Select Files
               </Button>
-              <p className="text-sm text-muted-foreground">
-                Supports PDF, DOCX, TXT files up to 10MB
+              <p className="text-xs text-gray-400 mt-4 font-medium tracking-wide text-center">
+                Supports PDF and TXT files up to 10MB
               </p>
               <input
                 ref={fileInputRef}
                 type="file"
                 multiple
-                accept=".pdf,.docx,.txt"
+                accept=".pdf,.txt"
                 className="hidden"
                 onChange={handleFileSelect}
               />

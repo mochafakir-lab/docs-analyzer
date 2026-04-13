@@ -1,27 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function POST(request: NextRequest) {
   try {
     const { documentText, question, conversationHistory } = await request.json();
 
     if (!documentText || !question) {
-      return NextResponse.json( 
+      return NextResponse.json(
         { error: "Document text and question are required" },
         { status: 400 }
       );
     }
 
-    if (!process.env.GEMINI_API_KEY) {
+    if (!process.env.GROQ_API_KEY) {
       return NextResponse.json(
-        { error: "Gemini API key not configured" },
+        { error: "Groq API key not configured" },
         { status: 500 }
       );
     }
-
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Build conversation context
     let conversationContext = "";
@@ -45,17 +43,14 @@ Please provide a clear, accurate, and helpful answer based on the document. If t
 Keep your response concise and focused on answering the specific question.`;
 
     async function askOnce(): Promise<string> {
-      const completion = await model.generateContent({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.2,
-          topP: 0.9,
-          topK: 40,
-          maxOutputTokens: 512,
-        },
+      const completion = await groq.chat.completions.create({
+        messages: [{ role: "user", content: prompt }],
+        model: "llama-3.3-70b-versatile",
+        temperature: 0.2,
+        top_p: 0.9,
+        max_tokens: 512,
       });
-      const resp = await completion.response;
-      return resp.text();
+      return completion.choices[0]?.message?.content || "";
     }
 
     let answer: string;
@@ -72,7 +67,7 @@ Keep your response concise and focused on answering the specific question.`;
     });
   } catch (error) {
     console.error("Error processing chat:", error);
-    console.error("Error details:", error instanceof Error ? error.message : error);
+    console.error("Error details:", error instanceof Error ? error.message : String(error));
     return NextResponse.json(
       { error: "Failed to process question", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }

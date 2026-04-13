@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,14 +14,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!process.env.GEMINI_API_KEY) {
+    if (!process.env.GROQ_API_KEY) {
       return NextResponse.json(
-        { error: "Gemini API key not configured" },
+        { error: "Groq API key not configured" },
         { status: 500 }
       );
     }
-
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const prompt = `You are a legal document analysis AI specializing in clause extraction. Extract and categorize all important clauses from the following legal document.
 
@@ -44,7 +42,7 @@ Please identify and extract clauses in the following JSON format:
   "clauseCategories": [
     {
       "name": "category name",
-      "count": number,
+      "count": 0,
       "clauses": ["clause_id1", "clause_id2"]
     }
   ],
@@ -69,9 +67,13 @@ Focus on extracting:
 
 Provide only valid JSON without any markdown formatting or code blocks.`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const completion = await groq.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "llama-3.3-70b-versatile",
+      response_format: { type: "json_object" },
+    });
+    
+    const text = completion.choices[0]?.message?.content || "";
 
     // Try to parse JSON from the response
     let extractionData;
@@ -81,9 +83,9 @@ Provide only valid JSON without any markdown formatting or code blocks.`;
     } catch (parseError) {
       console.error("Error parsing JSON:", parseError);
       return NextResponse.json(
-        { 
+        {
           error: "Failed to parse extraction results",
-          rawResponse: text 
+          rawResponse: text
         },
         { status: 500 }
       );
