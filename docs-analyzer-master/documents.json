@@ -22,5 +22,17 @@
     "uploadDate": "2026-04-13T18:51:16.360Z",
     "createdAt": "2026-04-13T18:51:16.361Z",
     "updatedAt": "2026-04-13T18:51:16.361Z"
+  },
+  {
+    "id": 1780607089786,
+    "filename": "1780607083251-ywn2vmw34qn.pdf",
+    "originalName": "DATA_STRUCTURE_SHORT_NOTES.pdf",
+    "fileSize": 4781623,
+    "mimeType": "application/pdf",
+    "filePath": "/uploads/documents/1780607083251-ywn2vmw34qn.pdf",
+    "status": "processing",
+    "uploadDate": "2026-06-04T21:04:49.754Z",
+    "createdAt": "2026-06-04T21:04:49.764Z",
+    "updatedAt": "2026-06-04T21:04:49.770Z"
   }
 ]
